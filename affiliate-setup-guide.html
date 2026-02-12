@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Affiliate Platform — Setup Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #f7f8fc;
+  --white: #ffffff;
+  --brand: #5b4ced;
+  --brand-light: #ede9ff;
+  --brand-mid: #8b7ef8;
+  --success: #16a34a;
+  --success-light: #dcfce7;
+  --warning: #d97706;
+  --warning-light: #fef3c7;
+  --danger: #dc2626;
+  --danger-light: #fee2e2;
+  --text: #1a1a2e;
+  --text-mid: #4a4a6a;
+  --text-dim: #9090b0;
+  --border: #e4e4f0;
+  --shadow: 0 2px 12px rgba(91,76,237,0.08);
+  --shadow-lg: 0 8px 32px rgba(91,76,237,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Layout */
+.page-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #5b4ced 0%, #8b7ef8 100%);
+  border-radius: 20px;
+  padding: 40px 40px 36px;
+  color: white;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 40%;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 99px;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+.hero p {
+  font-size: 15px;
+  opacity: 0.85;
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+}
+.hero-meta {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+.hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* Progress tracker */
+.progress-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.progress-title { font-size: 14px; font-weight: 600; color: var(--text-mid); }
+.progress-pct { font-size: 14px; font-weight: 700; color: var(--brand); }
+
+.progress-bar-bg {
+  height: 8px;
+  background: var(--brand-light);
+  border-radius: 99px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand), var(--brand-mid));
+  border-radius: 99px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.steps-mini {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.step-dot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--white);
+}
+.step-dot.done {
+  background: var(--success-light);
+  border-color: #86efac;
+  color: var(--success);
+}
+.step-dot.active {
+  background: var(--brand-light);
+  border-color: var(--brand);
+  color: var(--brand);
+  font-weight: 600;
+}
+.step-dot .dot-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: currentColor;
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  flex-shrink: 0;
+}
+.step-dot.done .dot-num { background: var(--success); }
+.step-dot.done .dot-num::after { content: '✓'; color: white; }
+.step-dot.done .dot-label { display: none; }
+.step-dot .dot-label { font-size: 11px; }
+
+/* Prerequisites */
+.prereq-card {
+  background: var(--warning-light);
+  border: 1px solid #fbbf24;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.prereq-title {
+  font-size: 15px; font-weight: 700;
+  color: var(--warning);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.prereq-list {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.prereq-item {
+  display: flex; align-items: center; gap: 10px;
+  background: white;
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid rgba(251,191,36,0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.prereq-item:hover { border-color: #fbbf24; }
+.prereq-item.checked { background: var(--success-light); border-color: #86efac; }
+.prereq-check {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 2px solid #d97706;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+.prereq-item.checked .prereq-check {
+  background: var(--success); border-color: var(--success); color: white;
+}
+.prereq-text { font-size: 14px; font-weight: 500; }
+.prereq-item.checked .prereq-text { color: var(--success); text-decoration: line-through; opacity: 0.7; }
+
+.prereq-warning {
+  margin-top: 12px;
+  background: var(--danger-light);
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--danger);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+
+/* Step cards */
+.step-card {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.step-card.active { border-color: var(--brand); box-shadow: var(--shadow-lg); }
+.step-card.completed { border-color: #86efac; }
+.step-card.locked { opacity: 0.5; pointer-events: none; }
+
+.step-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px;
+  cursor: pointer;
+  user-select: none;
+}
+.step-num {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--brand-light);
+  color: var(--brand);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 16px;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.step-card.active .step-num { background: var(--brand); color: white; }
+.step-card.completed .step-num { background: var(--success); color: white; }
+.step-card.completed .step-num::after { content: '✓'; }
+
+.step-title-wrap { flex: 1; }
+.step-title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.step-subtitle { font-size: 13px; color: var(--text-dim); }
+
+.step-chevron {
+  font-size: 20px; color: var(--text-dim);
+  transition: transform 0.3s;
+}
+.step-card.active .step-chevron { transform: rotate(180deg); color: var(--brand); }
+
+.step-body {
+  display: none;
+  padding: 0 24px 24px;
+  border-top: 1px solid var(--border);
+}
+.step-card.active .step-body { display: block; }
+
+/* Step content */
+.step-intro {
+  font-size: 14px;
+  color: var(--text-mid);
+  padding: 16px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.action-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.action-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.action-item:hover { background: var(--brand-light); border-color: var(--brand); }
+.action-item.done { background: var(--success-light); border-color: #86efac; }
+
+.action-check {
+  width: 24px; height: 24px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+.action-item.done .action-check { background: var(--success); border-color: var(--success); color: white; font-size: 13px; }
+.action-item:hover:not(.done) .action-check { border-color: var(--brand); }
+
+.action-content { flex: 1; }
+.action-text { font-size: 14px; font-weight: 500; line-height: 1.5; }
+.action-item.done .action-text { color: var(--text-dim); text-decoration: line-through; }
+.action-tip {
+  font-size: 12px; color: var(--text-dim);
+  margin-top: 4px; line-height: 1.4;
+}
+
+/* Callouts */
+.callout {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.callout.warn { background: var(--warning-light); border: 1px solid #fbbf24; color: #92400e; }
+.callout.danger { background: var(--danger-light); border: 1px solid #fca5a5; color: #991b1b; }
+.callout.info { background: var(--brand-light); border: 1px solid #c4b5fd; color: #4c1d95; }
+.callout.success { background: var(--success-light); border: 1px solid #86efac; color: #14532d; }
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.callout strong { font-weight: 700; }
+
+/* Code / field */
+.field-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: #f0f0f8;
+  border: 1px solid var(--border);
+  color: var(--brand);
+  padding: 2px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+/* CTA button */
+.btn-done {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px; font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 8px;
+  font-family: 'Inter', sans-serif;
+}
+.btn-done:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(91,76,237,0.35); }
+.btn-done:active { transform: translateY(0); }
+
+/* Success */
+.success-banner {
+  display: none;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  margin-top: 32px;
+}
+.success-banner.visible { display: block; }
+.success-banner h2 { font-size: 28px; margin-bottom: 10px; }
+.success-banner p { opacity: 0.9; font-size: 15px; }
+.success-checklist {
+  display: flex; flex-direction: column; gap: 8px;
+  max-width: 360px; margin: 20px auto 0;
+  text-align: left;
+}
+.success-checklist-item {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px; padding: 10px 14px; font-size: 14px;
+}
+
+/* Troubleshoot */
+.trouble-section {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 32px;
+  box-shadow: var(--shadow);
+}
+.trouble-title {
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.trouble-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.trouble-q {
+  padding: 14px 16px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  user-select: none;
+  transition: background 0.2s;
+}
+.trouble-q:hover { background: var(--bg); }
+.trouble-q.open { background: var(--brand-light); color: var(--brand); }
+.trouble-a {
+  display: none;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text-mid);
+  border-top: 1px solid var(--border);
+  line-height: 1.7;
+  background: var(--bg);
+}
+.trouble-q.open + .trouble-a { display: block; }
+
+@media (max-width: 600px) {
+  .hero { padding: 28px 24px; }
+  .hero h1 { font-size: 24px; }
+  .page-wrap { padding: 24px 16px 60px; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">📋 Operator Setup Guide</div>
+    <h1>Affiliate Platform<br>Configuration</h1>
+    <p>Step-by-step guide to configure offers, manage partners, and process payments in the Affiliate Platform.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">⏱ 20–30 minutes</div>
+      <div class="hero-meta-item">✅ 5 sections</div>
+      <div class="hero-meta-item">🎯 For operators</div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-card">
+    <div class="progress-header">
+      <span class="progress-title">Setup Progress</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="steps-mini" id="stepsMini">
+      <div class="step-dot active" onclick="openStep(0)"><div class="dot-num">1</div><span class="dot-label">Create offer</span></div>
+      <div class="step-dot" onclick="openStep(1)"><div class="dot-num">2</div><span class="dot-label">Set commission</span></div>
+      <div class="step-dot" onclick="openStep(2)"><div class="dot-num">3</div><span class="dot-label">Manage partners</span></div>
+      <div class="step-dot" onclick="openStep(3)"><div class="dot-num">4</div><span class="dot-label">Process payments</span></div>
+      <div class="step-dot" onclick="openStep(4)"><div class="dot-num">5</div><span class="dot-label">Configure postbacks</span></div>
+    </div>
+  </div>
+
+  <!-- Prerequisites -->
+  <div class="prereq-card">
+    <div class="prereq-title">⚠️ Before you start — operator checklist</div>
+    <div class="prereq-list">
+      <div class="prereq-item" onclick="togglePrereq(this)">
+        <div class="prereq-check"></div>
+        <div class="prereq-text">🔑 Access to Affiliate Platform as operator</div>
+      </div>
+      <div class="prereq-item" onclick="togglePrereq(this)">
+        <div class="prereq-check"></div>
+        <div class="prereq-text">🏷 Brand is configured with tracking domain</div>
+      </div>
+      <div class="prereq-item" onclick="togglePrereq(this)">
+        <div class="prereq-check"></div>
+        <div class="prereq-text">📋 Payment processing method decided (bank/crypto/other)</div>
+      </div>
+      <div class="prereq-item" onclick="togglePrereq(this)">
+        <div class="prereq-check"></div>
+        <div class="prereq-text">💡 Understanding of Revenue Share vs CPA commission models</div>
+      </div>
+    </div>
+    <div class="prereq-warning">
+      <span>🚨</span>
+      <span><strong>Important:</strong> Partners cannot see or accept offers until they are set to "Approved" status. Make sure to review partner moderation status before creating offers.</span>
+    </div>
+  </div>
+
+  <!-- STEP 1: CREATE OFFER -->
+  <div class="step-card active" id="step-0">
+    <div class="step-header" onclick="toggleStep(0)">
+      <div class="step-num">1</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Create an Offer</div>
+        <div class="step-subtitle">Affiliate → Offers → Add Offer</div>
+      </div>
+      <div class="step-chevron">⌄</div>
+    </div>
+    <div class="step-body">
+      <div class="step-intro">Navigate to the Affiliate Platform and set up the basic offer configuration. Partners will see these settings when browsing available offers.</div>
+      
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <span><strong>Offer types:</strong> Private offers are visible only to specific partners you assign. Public offers are visible to all approved partners on the brand.</span>
+      </div>
+
+      <div class="action-list">
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Navigate to <strong>Affiliate → Offers → Add Offer</strong></div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Select the <span class="field-name">Brand</span> for this offer</div>
+            <div class="action-tip">This determines which project the offer belongs to</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Enter a clear <span class="field-name">Offer Name</span></div>
+            <div class="action-tip">⚠ Partners will see this name exactly as you type it — make it descriptive</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Configure <span class="field-name">GEO</span> targeting</div>
+            <div class="action-tip">Auto-populated from brand settings. You can narrow to specific countries. Players from excluded GEOs will register but won't count toward rewards.</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Set <span class="field-name">Offer Attribution Period (days)</span></div>
+            <div class="action-tip">How long after registration should player activity count? Disable toggle = track indefinitely</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Write an <span class="field-name">Offer Description</span></div>
+            <div class="action-tip">Visible to partners — describe what makes this offer attractive</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Choose <span class="field-name">Select Availability</span>: Private or Public</div>
+            <div class="action-tip">Private = only assigned partners see it. Public = all approved partners see it.</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Select <span class="field-name">Offer Tracking Domain Link</span></div>
+            <div class="action-tip">Populated from brand settings — this is your tracking domain</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Configure <span class="field-name">Fallback Link</span></div>
+            <div class="action-tip">⚠ Where traffic goes if main link fails (e.g. demo.vegangster.com) — prevents traffic loss</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-done" onclick="completeStep(0)">✓ Step 1 complete — Next step</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: COMMISSION -->
+  <div class="step-card locked" id="step-1">
+    <div class="step-header" onclick="toggleStep(1)">
+      <div class="step-num">2</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Configure Commission Type</div>
+        <div class="step-subtitle">Program Settings — Revenue Share, CPA, or Hybrid</div>
+      </div>
+      <div class="step-chevron">⌄</div>
+    </div>
+    <div class="step-body">
+      <div class="step-intro">Every offer MUST have Program Settings configured. Choose which commission model partners will earn from: percentage of revenue (Revenue Share), fixed reward per event (CPA), or a combination (Hybrid).</div>
+      
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <span><strong>Required field.</strong> You cannot save an offer without configuring Program Settings. Partners will see these commission details when reviewing the offer.</span>
+      </div>
+
+      <div class="action-list">
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Choose commission type: <strong>Revenue Share</strong>, <strong>CPA</strong>, or <strong>Hybrid</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top:14px;">
+        <span class="callout-icon">💡</span>
+        <span><strong>Revenue Share:</strong> Partner earns % of revenue (e.g. 70% of NGR). Configure income formula + commission percentage/tiers.<br><br>
+        <strong>CPA:</strong> Partner earns fixed reward per event (e.g. $50 per registration). Set event type, reward amount, and optional threshold.<br><br>
+        <strong>Hybrid:</strong> Combines both models. Configure RS + CPA settings together. Qualification rules show labels (RS) or (CPA).</span>
+      </div>
+
+      <div class="action-list" style="margin-top:14px;">
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">If Revenue Share: Set <span class="field-name">Revenue Share Income Formula</span> (e.g. NGR)</div>
+            <div class="action-tip">Define base metric. Supports math operators for custom formulas</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">If Revenue Share: Choose <span class="field-name">Commission Type</span></div>
+            <div class="action-tip">Fixed (e.g. 70%), Step Fee (tiered by steps), or Tier Fee (see docs for calculation differences)</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">If CPA: Select <span class="field-name">Event for Reward</span></div>
+            <div class="action-tip">Which event triggers reward: Registration, First Deposit, etc.</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">If CPA: Set <span class="field-name">Fixed Reward</span> amount</div>
+            <div class="action-tip">E.g. $70 per registration</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">If CPA: Configure <span class="field-name">Threshold</span> (optional)</div>
+            <div class="action-tip">Condition before reward counts: No Set / Deposits Amount / Number of Registrations + Amount value</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Add <span class="field-name">Qualification Rules</span> (optional)</div>
+            <div class="action-tip">Enable toggle to add conditions (e.g. GGR ≥ 100 over period). Not visible to partners</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-done" onclick="completeStep(1)">✓ Step 2 complete — Next step</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: PARTNERS -->
+  <div class="step-card locked" id="step-2">
+    <div class="step-header" onclick="toggleStep(2)">
+      <div class="step-num">3</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Manage Partners</div>
+        <div class="step-subtitle">Review, approve, and configure partner accounts</div>
+      </div>
+      <div class="step-chevron">⌄</div>
+    </div>
+    <div class="step-body">
+      <div class="step-intro">Partners must be set to "Approved" status before they can see or accept offers. Review partner registrations, configure payment settings, and monitor their performance statistics.</div>
+      
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <span><strong>Partner statuses:</strong> New → On Moderation → Approved (or Rejected). Only Approved partners can view and accept offers on the platform.</span>
+      </div>
+
+      <div class="action-list">
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Navigate to <strong>Affiliate → Partners</strong> and select your brand</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Review partner list and click on a partner to open their profile</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Set <span class="field-name">Partner Status</span> to Approved</div>
+            <div class="action-tip">Options: New, On Moderation, Rejected, Approved. Only Approved partners see offers</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Configure <span class="field-name">Payment Information</span></div>
+            <div class="action-tip">Set payout model (e.g. On Request or monthly) and minimum payout amount</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Review <span class="field-name">Current Balance</span></div>
+            <div class="action-tip">You can manually adjust balance here. ⚠ Changes are visible to the partner</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Configure <span class="field-name">Negative Carry Over</span> settings</div>
+            <div class="action-tip">E.g. Always Carry Over. See field tooltip for full explanation</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Use the 👁 <strong>View as Partner</strong> icon to preview their dashboard</div>
+            <div class="action-tip">Read-only view — see exactly what the partner sees, cannot edit from this view</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Check <strong>Statistics</strong> tab for performance data</div>
+            <div class="action-tip">Use Column Picker to customize. CSV export coming soon</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-done" onclick="completeStep(2)">✓ Step 3 complete — Next step</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: PAYMENTS -->
+  <div class="step-card locked" id="step-3">
+    <div class="step-header" onclick="toggleStep(3)">
+      <div class="step-num">4</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Process Payment Requests</div>
+        <div class="step-subtitle">Review and approve partner withdrawals</div>
+      </div>
+      <div class="step-chevron">⌄</div>
+    </div>
+    <div class="step-body">
+      <div class="step-intro">Partners submit withdrawal requests from their dashboard. You review each request, adjust the payout amount if needed, send payment externally, and mark the request as Paid to update their balance.</div>
+      
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <span><strong>Payments are processed externally.</strong> The platform does NOT send payments automatically. You choose the payment method (bank, crypto, etc.) and process it outside the platform.</span>
+      </div>
+
+      <div class="callout info" style="margin-top:14px;">
+        <span class="callout-icon">💡</span>
+        <span><strong>Balance types:</strong> Current Balance = earnings from previous months, available to withdraw. On Hold Balance = current month's accumulating earnings, not yet available.</span>
+      </div>
+
+      <div class="action-list" style="margin-top:14px;">
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Go to <strong>Affiliate → Partners → [Partner] → Payments → Requests</strong></div>
+            <div class="action-tip">Partner's payment requests appear here after they submit from their Balance tab</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Open a payment request to review</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Adjust payout amount if needed (partial payment is allowed)</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Set request status to <strong>Pending</strong></div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Process payment externally via your chosen method</div>
+            <div class="action-tip">Bank transfer, crypto wallet, PayPal, etc. — you handle this outside the platform</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">After payment is sent, set status to <strong>Paid</strong></div>
+            <div class="action-tip">Partner's Current Balance will be automatically recalculated</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Add an <strong>Operator Comment</strong> in History tab</div>
+            <div class="action-tip">For internal notes — e.g. payment method used, transaction ID, etc.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout success" style="margin-top:14px;">
+        <span class="callout-icon">✓</span>
+        <span>If a request is <strong>Cancelled</strong>, the partner can submit a new request immediately without waiting for the next monthly cycle.</span>
+      </div>
+
+      <button class="btn-done" onclick="completeStep(3)">✓ Step 4 complete — Next step</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: POSTBACKS -->
+  <div class="step-card locked" id="step-4">
+    <div class="step-header" onclick="toggleStep(4)">
+      <div class="step-num">5</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Configure Postbacks (Partner Setup)</div>
+        <div class="step-subtitle">Postbacks are set up by partners, not operators</div>
+      </div>
+      <div class="step-chevron">⌄</div>
+    </div>
+    <div class="step-body">
+      <div class="step-intro">Postbacks allow partners to send event notifications to their third-party tracking systems. This is configured by the partner in their dashboard — operators do not set this up.</div>
+      
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <span><strong>Partner responsibility.</strong> The postback link is generated by the partner in their external tracking system and pasted into the Postback section in their dashboard. Operators do NOT configure this.</span>
+      </div>
+
+      <div class="action-list">
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Understand that postbacks are partner-configured</div>
+            <div class="action-tip">Partner selects Event (e.g. Registration), generates endpoint URL in their external system, pastes it into Postback Link field</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Inform partners they can configure postbacks in their dashboard</div>
+            <div class="action-tip">Each time the selected event occurs, a notification is sent to their external tracking system</div>
+          </div>
+        </div>
+        <div class="action-item" onclick="toggleAction(this)">
+          <div class="action-check"></div>
+          <div class="action-content">
+            <div class="action-text">Confirm tracking domain was set up during brand configuration</div>
+            <div class="action-tip">Contact internal team if you need tracking domain details</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top:14px;">
+        <span class="callout-icon">💡</span>
+        <span><strong>How it works:</strong> Partner generates postback endpoint URL in their 3rd-party system → Partner pastes it into Postback Link field → Partner chooses parameters to include → Each event occurrence triggers a notification to that endpoint.</span>
+      </div>
+
+      <button class="btn-done" onclick="completeStep(4)">🎉 Setup complete!</button>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success-banner" id="successBanner">
+    <div style="font-size:56px; margin-bottom:12px;">🎉</div>
+    <h2>Affiliate Platform Configured!</h2>
+    <p>Your affiliate system is ready to accept partners and track performance.</p>
+    <div class="success-checklist">
+      <div class="success-checklist-item">✅ Offers created with commission settings</div>
+      <div class="success-checklist-item">✅ Partners approved and configured</div>
+      <div class="success-checklist-item">✅ Payment workflow understood</div>
+      <div class="success-checklist-item">✅ Postback system explained to partners</div>
+    </div>
+  </div>
+
+  <!-- FAQ / Troubleshooting -->
+  <div class="trouble-section">
+    <div class="trouble-title">❓ Frequently Asked Questions</div>
+
+    <div class="trouble-item">
+      <div class="trouble-q" onclick="toggleTrouble(this)">
+        What does a partner see when viewing an offer? <span>+</span>
+      </div>
+      <div class="trouble-a">
+        Partners see: Offer Name, Offer ID, Description, Type, Fixed Reward, Event for Reward, GEO, and Destination Links. From Campaigns they can modify the destination link and add tracking parameters (e.g. s1=10).
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-q" onclick="toggleTrouble(this)">
+        How do tracking parameters work? <span>+</span>
+      </div>
+      <div class="trouble-a">
+        Partners add custom parameters to Campaign links (e.g. s1=value). They can create multiple campaigns with different parameters to distribute links across different traffic sources. In Statistics, they can group results by parameter (up to 2 nesting levels, by campaign, etc.).
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-q" onclick="toggleTrouble(this)">
+        What happens if a player registers via a link from a different GEO? <span>+</span>
+      </div>
+      <div class="trouble-a">
+        The player will successfully register, but they will NOT be counted toward the partner's rewards under that offer. GEO settings on the offer determine which players qualify for reward calculations.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-q" onclick="toggleTrouble(this)">
+        Can I create an affiliate account on behalf of a partner? <span>+</span>
+      </div>
+      <div class="trouble-a">
+        For security reasons, partners should register themselves. However, if they encounter issues, the operator can create an account using the partner's email address.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-q" onclick="toggleTrouble(this)">
+        What's the difference between Current Balance and On Hold Balance? <span>+</span>
+      </div>
+      <div class="trouble-a">
+        <strong>Current Balance</strong> = earnings from previous months, available for withdrawal requests.<br>
+        <strong>On Hold Balance</strong> = earnings accumulating during the current month, not yet available until the calculation period ends.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-q" onclick="toggleTrouble(this)">
+        How do I set up the tracking domain? <span>+</span>
+      </div>
+      <div class="trouble-a">
+        The tracking domain is configured during brand setup by the internal team. If you need these details, contact the support team and they will share them with you.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+let stepStates = [true, false, false, false, false];
+let stepDone = [false, false, false, false, false];
+let currentStep = 0;
+
+function openStep(idx) {
+  stepStates = stepStates.map((_, i) => i === idx);
+  renderSteps();
+}
+
+function toggleStep(idx) {
+  if (document.getElementById(`step-${idx}`).classList.contains('locked')) return;
+  openStep(stepStates[idx] ? -1 : idx);
+}
+
+function toggleAction(el) {
+  el.classList.toggle('done');
+  if (el.classList.contains('done')) {
+    el.querySelector('.action-check').textContent = '✓';
+  } else {
+    el.querySelector('.action-check').textContent = '';
+  }
+}
+
+function togglePrereq(el) {
+  el.classList.toggle('checked');
+  el.querySelector('.prereq-check').textContent = el.classList.contains('checked') ? '✓' : '';
+}
+
+function completeStep(idx) {
+  stepDone[idx] = true;
+  if (idx < 4) {
+    currentStep = idx + 1;
+    openStep(idx + 1);
+  } else {
+    document.getElementById('successBanner').classList.add('visible');
+    document.getElementById('successBanner').scrollIntoView({ behavior: 'smooth' });
+  }
+  renderSteps();
+  updateProgress();
+}
+
+function renderSteps() {
+  for (let i = 0; i < 5; i++) {
+    const card = document.getElementById(`step-${i}`);
+    card.classList.remove('active', 'completed', 'locked');
+
+    if (stepDone[i]) {
+      card.classList.add('completed');
+    } else if (i === currentStep) {
+      if (stepStates[i]) card.classList.add('active');
+    } else if (i > currentStep) {
+      card.classList.add('locked');
+    }
+
+    if (i <= currentStep && !stepDone[i] && stepStates[i]) {
+      card.classList.add('active');
+    }
+
+    const body = card.querySelector('.step-body');
+    body.style.display = stepStates[i] && !card.classList.contains('locked') ? 'block' : 'none';
+
+    const dot = document.querySelectorAll('.step-dot')[i];
+    dot.classList.remove('active', 'done');
+    if (stepDone[i]) dot.classList.add('done');
+    else if (i === currentStep) dot.classList.add('active');
+  }
+}
+
+function updateProgress() {
+  const done = stepDone.filter(Boolean).length;
+  const pct = Math.round((done / 5) * 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function toggleTrouble(el) {
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.trouble-q').forEach(q => {
+    q.classList.remove('open');
+    q.querySelector('span').textContent = '+';
+  });
+  if (!wasOpen) {
+    el.classList.add('open');
+    el.querySelector('span').textContent = '−';
+  }
+}
+
+renderSteps();
+updateProgress();
+</script>
+</body>
+</html>
